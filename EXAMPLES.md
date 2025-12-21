@@ -4,8 +4,20 @@
 
 Connect to a server and browse from home directory:
 
+## Example 10: Workflow Script
+
+Create a custom script for your workflow:
+
 ```bash
-./ssh_dir_browser.py myuser@example.com
+#!/bin/bash
+# deploy-browse.sh - Browse deployment directory
+
+./ssh_dir_browser.py deploy@production.example.com \
+    --start-path /var/www/myapp \
+    -i ~/.ssh/deploy_key
+```
+
+## Example 11: Programmatic Usagedir_browser.py myuser@example.com
 ```
 
 ## Example 2: Connect with Custom Port
@@ -96,11 +108,30 @@ Use arrow keys to select a host and press Enter to connect.
 
 2. Navigate using arrow keys to your project directory
 
-3. Press `o` to open in VS Code
+3. Press `n` to create a new folder if needed
 
-4. VS Code will launch and connect via Remote-SSH
+4. Press `r` to refresh the directory listing
 
-## Example 9: Workflow Script
+5. Press `o` to open in VS Code
+
+6. VS Code will launch and connect via Remote-SSH
+
+## Example 9: Create Project Structure
+
+1. Connect to your server:
+   ```bash
+   ./ssh_dir_browser.py myuser@example.com --start-path /var/www
+   ```
+
+2. Press `n` to create a new project folder (e.g., "my-new-project")
+
+3. Press `Enter` to navigate into the new folder
+
+4. Press `o` to open it in VS Code
+
+5. Start developing!
+
+## Example 10: Workflow Script
 
 Create a custom script for your workflow:
 
@@ -113,7 +144,7 @@ Create a custom script for your workflow:
     -i ~/.ssh/deploy_key
 ```
 
-## Example 10: Programmatic Usage
+## Example 11: Programmatic Usage
 
 ```python
 #!/usr/bin/env python3
@@ -142,7 +173,7 @@ if __name__ == "__main__":
     browse_server("example.com", "myuser", "/var/www")
 ```
 
-## Example 11: Multiple Servers Setup
+## Example 12: Multiple Servers Setup
 
 ```python
 #!/usr/bin/env python3
@@ -186,7 +217,7 @@ for server in servers:
 print(f"\nTotal hosts configured: {len(servers)}")
 ```
 
-## Example 12: Add SSH Host to Config
+## Example 13: Add SSH Host to Config
 
 ```python
 #!/usr/bin/env python3
@@ -207,7 +238,7 @@ print(message)
 # Or in VS Code: Remote-SSH: Connect to Host → myserver
 ```
 
-## Example 13: Check VS Code Setup
+## Example 14: Check VS Code Setup
 
 ```bash
 python3 vscode_integration.py

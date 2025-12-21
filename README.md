@@ -103,6 +103,7 @@ Connect to a remote server and start browsing:
 | `↑` / `↓` | Navigate up/down |
 | `Enter` | Open directory |
 | `o` | Open current directory in VS Code |
+| `n` | Create new folder |
 | `h` | Go to home directory |
 | `r` | Refresh directory listing |
 | `q` | Quit |
@@ -112,7 +113,9 @@ Connect to a remote server and start browsing:
 1. Use arrow keys to move through the directory listing
 2. Press `Enter` to enter a directory
 3. Select `..` to go to parent directory
-4. Press `o` when you want to open the current directory in VS Code
+4. Press `n` to create a new folder in the current directory
+5. Press `r` to refresh the directory contents
+6. Press `o` when you want to open the current directory in VS Code
 
 ### VS Code Integration
 

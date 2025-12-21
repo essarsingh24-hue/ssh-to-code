@@ -75,6 +75,47 @@ class DirectoryBrowser:
         self.scroll_offset = 0
         self.items = self.get_directory_contents()
     
+    def create_folder(self, stdscr) -> Optional[str]:
+        """Prompt user to create a new folder"""
+        height, width = stdscr.getmaxyx()
+        
+        # Create input window
+        input_win = curses.newwin(5, min(60, width - 4), height // 2 - 2, (width - min(60, width - 4)) // 2)
+        input_win.box()
+        input_win.addstr(1, 2, "Create New Folder:", curses.A_BOLD)
+        input_win.addstr(2, 2, "Name: ")
+        input_win.refresh()
+        
+        # Enable cursor for input
+        curses.curs_set(1)
+        curses.echo()
+        
+        # Get folder name
+        folder_name = ""
+        try:
+            folder_name = input_win.getstr(2, 8, 40).decode('utf-8').strip()
+        except:
+            pass
+        finally:
+            curses.noecho()
+            curses.curs_set(0)
+        
+        if not folder_name:
+            return None
+        
+        # Validate folder name
+        if '/' in folder_name or folder_name in ['.', '..']:
+            return f"Invalid folder name: {folder_name}"
+        
+        # Create folder on remote server
+        try:
+            new_path = os.path.join(self.current_path, folder_name)
+            cmd = f"mkdir -p '{new_path}'"
+            self.ssh_handler.execute_command(cmd)
+            return f"Created folder: {folder_name}"
+        except Exception as e:
+            return f"Error creating folder: {str(e)}"
+    
     def open_in_vscode(self):
         """Open current directory in VS Code"""
         try:
@@ -112,7 +153,7 @@ class DirectoryBrowser:
         stdscr.addstr(1, 0, path_line[:width-1], curses.A_BOLD)
         
         # Help line
-        help_text = "↑/↓: Navigate | Enter: Open | 'o': Open in VS Code | 'q': Quit"
+        help_text = "↑/↓: Navigate | Enter: Open | 'o': VS Code | 'n': New Folder | 'r': Refresh | 'q': Quit"
         stdscr.addstr(2, 0, help_text[:width-1], curses.A_DIM)
         
         # Separator
@@ -229,6 +270,15 @@ class DirectoryBrowser:
                 # Refresh
                 self.items = self.get_directory_contents()
                 self.status_message = "Refreshed"
+            elif key == ord('n') or key == ord('N'):
+                # Create new folder
+                result = self.create_folder(stdscr)
+                if result:
+                    self.status_message = result
+                    # Refresh directory listing
+                    self.items = self.get_directory_contents()
+                else:
+                    self.status_message = "Folder creation cancelled"
 
 
 def main():
