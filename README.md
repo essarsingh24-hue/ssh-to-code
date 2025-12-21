@@ -6,6 +6,7 @@ A terminal-based directory browser that lets you SSH into a remote server, navig
 ![Python](https://img.shields.io/badge/Python-3.7+-green)
 ![VS Code](https://img.shields.io/badge/VS%20Code-Remote--SSH-purple)
 
+
 ## Features
 
 - 🚀 **Interactive Terminal UI** - Browse remote directories with an intuitive curses-based interface
