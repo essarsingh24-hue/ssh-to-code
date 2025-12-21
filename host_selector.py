@@ -166,7 +166,32 @@ def connect_to_host(host_config: Dict) -> bool:
 
 def main():
     """Main entry point for host selector"""
+    import argparse
+    
+    parser = argparse.ArgumentParser(description="SSH Host Selector")
+    parser.add_argument('host_name', nargs='?', help='Saved host name to connect to directly')
+    args, remaining = parser.parse_known_args()
+    
     config = ConfigManager()
+    
+    # If host name provided, connect directly
+    if args.host_name:
+        host_config = config.get_host(args.host_name)
+        if host_config:
+            print(f"Connecting to saved host: {args.host_name}")
+            connect_to_host(host_config)
+            return
+        else:
+            print(f"❌ Host '{args.host_name}' not found in saved configurations")
+            print("\nAvailable hosts:")
+            hosts = config.get_hosts()
+            if hosts:
+                for host in hosts:
+                    print(f"  - {host['name']}")
+            else:
+                print("  (none)")
+            print("\nAdd one with: python save_config.py add")
+            sys.exit(1)
     
     # If no hosts configured, show help
     hosts = config.get_hosts()
@@ -176,12 +201,12 @@ def main():
         print("\nNo saved hosts found.")
         print("\nYou can:")
         print("  1. Use the direct connection mode:")
-        print("     ./ssh_dir_browser.py user@hostname")
+        print("     ./ssh-browse user@hostname")
         print("\n  2. Add a host to configuration:")
-        print("     python3 -c \"from config_manager import ConfigManager; \\")
-        print("                 c = ConfigManager(); \\")
-        print("                 c.add_host('myhost', 'example.com', 'user', 22)\"")
-        print("\n  3. Edit the config file manually:")
+        print("     python save_config.py add")
+        print("\n  3. Or use the quick add:")
+        print("     python save_config.py quick myhost example.com user")
+        print("\n  4. Edit the config file manually:")
         print(f"     {config.config_path}")
         sys.exit(0)
     
@@ -195,7 +220,7 @@ def main():
             sys.exit(0)
         elif selected == 'NEW_HOST':
             print("\nTo add a new host, use:")
-            print("  ./ssh_dir_browser.py user@hostname")
+            print("  python save_config.py add")
             print("Or edit the config file:")
             print(f"  {config.config_path}")
             sys.exit(0)

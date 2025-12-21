@@ -1,0 +1,37 @@
+#!/bin/bash
+# Wrapper script to run ssh_dir_browser with proper environment
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Check if venv exists and activate it
+if [ -d "$SCRIPT_DIR/venv" ]; then
+    source "$SCRIPT_DIR/venv/bin/activate"
+elif [ -d "$SCRIPT_DIR/.venv" ]; then
+    source "$SCRIPT_DIR/.venv/bin/activate"
+fi
+
+# Check if paramiko is installed
+if ! python -c "import paramiko" 2>/dev/null; then
+    echo "❌ Error: paramiko is not installed"
+    echo ""
+    echo "Please install it with one of these methods:"
+    echo "  1. pip install paramiko"
+    echo "  2. pip install -r requirements.txt"
+    echo "  3. Run: ./install.sh"
+    echo ""
+    exit 1
+fi
+
+# Check if first argument looks like a saved host name (no @ symbol)
+if [ $# -ge 1 ] && [[ "$1" != *"@"* ]] && [[ "$1" != "-"* ]]; then
+    # Try to load from saved config
+    HOST_NAME="$1"
+    shift  # Remove first argument
+    
+    # Use host_selector to connect to saved host
+    python "$SCRIPT_DIR/host_selector.py" "$HOST_NAME" "$@"
+else
+    # Run the main script with all arguments
+    python "$SCRIPT_DIR/ssh_dir_browser.py" "$@"
+fi
+

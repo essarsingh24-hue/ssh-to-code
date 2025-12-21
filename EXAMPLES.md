@@ -1,6 +1,56 @@
 # SSH Directory Browser - Examples
 
-## Example 1: Quick Connection
+## Authentication Examples
+
+### Example 1: Encrypted PEM File (Password-Protected Key)
+
+The tool automatically detects and prompts for encrypted keys:
+
+```bash
+./ssh_dir_browser.py ubuntu@example.com -i ~/keys/encrypted-key.pem
+```
+
+Output:
+```
+🔑 Using key file: /Users/you/keys/encrypted-key.pem
+🔐 Key file is encrypted: /Users/you/keys/encrypted-key.pem
+Enter passphrase for key (attempt 1/3): ********
+✓ Key decrypted successfully
+✓ Connected successfully!
+```
+
+### Example 2: Unencrypted PEM File
+
+```bash
+./ssh_dir_browser.py ec2-user@aws-instance.com -i ~/Downloads/aws-key.pem
+```
+
+### Example 3: Password Authentication (No PEM File)
+
+```bash
+./ssh_dir_browser.py user@server.com --password
+```
+
+Output:
+```
+Password for user@server.com: ********
+✓ Connected successfully!
+```
+
+### Example 4: Using SSH Agent (Recommended)
+
+```bash
+# Add key to agent once
+ssh-add ~/.ssh/id_rsa
+# Enter passphrase: ********
+
+# Then connect without specifying key
+./ssh_dir_browser.py user@server.com
+```
+
+## Connection Examples
+
+### Example 5: Quick Connection
 
 Connect to a server and browse from home directory:
 

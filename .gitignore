@@ -31,9 +31,13 @@ wheels/
 *.swo
 *~
 
-# Config
+# Config and Personal Data
 config.json
 .ssh-dir-browser.json
+
+# Test files with personal data
+test_connection.py
+example_save_*.py
 
 # OS
 .DS_Store
@@ -41,3 +45,8 @@ Thumbs.db
 
 # Logs
 *.log
+.pytest_cache/
+
+# Coverage
+.coverage
+htmlcov/

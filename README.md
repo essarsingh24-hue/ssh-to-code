@@ -54,10 +54,10 @@ For easy access from anywhere:
 
 ```bash
 # Add to your ~/.bashrc or ~/.zshrc
-export PATH="$PATH:/Users/rajesh/work/hobby/ssh-to-code"
+export PATH="$PATH:/path/to/ssh-to-code"
 
 # Or create a symlink
-sudo ln -s /Users/rajesh/work/hobby/ssh-to-code/ssh_dir_browser.py /usr/local/bin/ssh-browse
+sudo ln -s /path/to/ssh-to-code/ssh_dir_browser.py /usr/local/bin/ssh-browse
 ```
 
 ## Quick Start
@@ -67,31 +67,42 @@ sudo ln -s /Users/rajesh/work/hobby/ssh-to-code/ssh_dir_browser.py /usr/local/bi
 Connect to a remote server and start browsing:
 
 ```bash
-./ssh_dir_browser.py user@hostname
+# Option 1: Use the wrapper script (automatically activates venv)
+./ssh-browse user@hostname
+
+# Option 2: Activate venv manually
+source venv/bin/activate
+python ssh_dir_browser.py user@hostname
 ```
 
 ### With Custom Port
 
 ```bash
-./ssh_dir_browser.py user@hostname -p 2222
+./ssh-browse user@hostname -p 2222
 ```
 
 ### With SSH Key
 
 ```bash
-./ssh_dir_browser.py user@hostname -i ~/.ssh/my_key
+./ssh-browse user@hostname -i ~/.ssh/my_key
 ```
 
 ### Start in Specific Directory
 
 ```bash
-./ssh_dir_browser.py user@hostname --start-path /var/www
+./ssh-browse user@hostname --start-path /var/www
 ```
 
 ### Password Authentication
 
 ```bash
-./ssh_dir_browser.py user@hostname --password
+./ssh-browse user@hostname --password
+```
+
+### AWS EC2 Example
+
+```bash
+./ssh-browse ubuntu@ec2-12-34-56-78.compute.amazonaws.com -i ~/Downloads/aws-key.pem
 ```
 
 ## Usage
@@ -129,6 +140,22 @@ Make sure you have:
 - VS Code installed with the `code` command in your PATH
 - Remote-SSH extension installed in VS Code
 - SSH host properly configured (or the app will help configure it)
+
+### Authentication Methods
+
+The tool supports multiple authentication methods:
+
+1. **Unencrypted SSH Keys**: Automatic authentication
+2. **Encrypted SSH Keys**: Will prompt for passphrase (3 attempts)
+3. **Password Authentication**: Use `--password` flag
+4. **SSH Agent**: Automatically uses keys from ssh-agent
+
+**See [AUTH_GUIDE.md](AUTH_GUIDE.md) for detailed authentication instructions**, including:
+- How to handle encrypted PEM files
+- What to do when you don't have the passphrase
+- Using SSH agent for convenience
+- Troubleshooting authentication issues
+- Cloud provider specific examples (AWS, DigitalOcean, etc.)
 
 ## Configuration
 
