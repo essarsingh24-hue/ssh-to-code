@@ -122,20 +122,30 @@ class DirectoryBrowser:
             host = self.ssh_handler.hostname
             user = self.ssh_handler.username
             port = self.ssh_handler.port
-            
-            # VS Code Remote-SSH URI format
-            # vscode://vscode-remote/ssh-remote+user@host:port/path
-            remote_uri = f"vscode://vscode-remote/ssh-remote+{user}@{host}"
+
+            # By default open the current directory. If a .code-workspace file is
+            # selected, open that workspace file instead.
+            target_path = self.current_path
+            target_label = "directory"
+            if self.items and 0 <= self.selected_index < len(self.items):
+                selected_name, selected_type = self.items[self.selected_index]
+                if selected_type == "file" and selected_name.endswith('.code-workspace'):
+                    target_path = os.path.join(self.current_path, selected_name)
+                    target_label = "workspace"
+
+            ssh_target = f"{user}@{host}"
             if port != 22:
-                remote_uri += f":{port}"
-            remote_uri += self.current_path
-            
+                ssh_target += f":{port}"
+
             # Open VS Code
-            subprocess.Popen(['code', '--remote', f'ssh-remote+{user}@{host}', self.current_path],
+            subprocess.Popen(['code', '--remote', f'ssh-remote+{ssh_target}', target_path],
                            stdout=subprocess.DEVNULL, 
                            stderr=subprocess.DEVNULL)
-            
-            return True, f"Opening {self.current_path} in VS Code..."
+
+            if target_label == "workspace":
+                return True, f"Opening workspace {target_path} in VS Code..."
+
+            return True, f"Opening {target_path} in VS Code..."
         except Exception as e:
             return False, f"Error opening VS Code: {str(e)}"
     
@@ -153,7 +163,7 @@ class DirectoryBrowser:
         stdscr.addstr(1, 0, path_line[:width-1], curses.A_BOLD)
         
         # Help line
-        help_text = "↑/↓: Navigate | Enter: Open | 'o': VS Code | 'n': New Folder | 'r': Refresh | 'q': Quit"
+        help_text = "↑/↓: Navigate | Enter: Open | 'o': VS Code (dir/.code-workspace) | 'n': New Folder | 'r': Refresh | 'q': Quit"
         stdscr.addstr(2, 0, help_text[:width-1], curses.A_DIM)
         
         # Separator
@@ -183,6 +193,9 @@ class DirectoryBrowser:
             elif item_type == "link":
                 display = f"🔗 {name}@"
                 attr = curses.A_DIM
+            elif name.endswith('.code-workspace'):
+                display = f"🧩 {name}"
+                attr = curses.A_NORMAL
             else:
                 display = f"📄 {name}"
                 attr = curses.A_NORMAL
@@ -246,7 +259,10 @@ class DirectoryBrowser:
                         self.navigate_to(name)
                         self.status_message = ""
                     else:
-                        self.status_message = f"'{name}' is not a directory"
+                        if name.endswith('.code-workspace'):
+                            self.status_message = f"Select 'o' to open workspace: {name}"
+                        else:
+                            self.status_message = f"'{name}' is not a directory"
             elif key == ord('o') or key == ord('O'):
                 # Open in VS Code
                 success, message = self.open_in_vscode()

@@ -1,6 +1,6 @@
 # SSH Directory Browser
 
-A terminal-based directory browser that lets you SSH into a remote server, navigate through directories interactively, and open selected directories directly in VS Code using the Remote-SSH extension.
+A terminal-based directory browser that lets you SSH into a remote server, navigate through directories interactively, and open selected directories or `.code-workspace` files directly in VS Code using the Remote-SSH extension.
 
 ![Terminal UI](https://img.shields.io/badge/Terminal-Based-blue)
 ![Python](https://img.shields.io/badge/Python-3.7+-green)
@@ -13,6 +13,7 @@ A terminal-based directory browser that lets you SSH into a remote server, navig
 - 🔐 **Secure SSH Connection** - Support for key-based and password authentication
 - 📂 **Visual File Browser** - Clear indicators for directories, files, executables, and symlinks
 - 💻 **VS Code Integration** - Open any remote directory directly in VS Code with one keystroke
+- 🧩 **Workspace File Support** - Open remote `.code-workspace` files directly in VS Code
 - ⚙️ **Configuration Management** - Save frequently used SSH hosts for quick access
 - 🎨 **Keyboard Navigation** - Fast and efficient navigation using arrow keys
 
@@ -24,14 +25,27 @@ A terminal-based directory browser that lets you SSH into a remote server, navig
 
 ## Installation
 
-### 1. Clone the repository
+### 1. Install from PyPI (recommended)
+
+```bash
+pip install ssh-to-code
+```
+
+### 2. Verify CLI installation
+
+```bash
+ssh-browse --help
+```
+
+### 3. (Optional) Install from source for development
 
 ```bash
 git clone <repository-url>
 cd ssh-to-code
+pip install -e .
 ```
 
-### 2. Install Python dependencies
+### 4. (Source install only) Install dependencies manually
 
 ```bash
 pip install paramiko
@@ -43,13 +57,13 @@ Or use the provided requirements file:
 pip install -r requirements.txt
 ```
 
-### 3. Make the script executable
+### 5. (Source install only) Make the script executable
 
 ```bash
 chmod +x ssh_dir_browser.py
 ```
 
-### 4. (Optional) Add to PATH
+### 6. (Optional, source install only) Add to PATH
 
 For easy access from anywhere:
 
@@ -68,42 +82,41 @@ sudo ln -s /path/to/ssh-to-code/ssh_dir_browser.py /usr/local/bin/ssh-browse
 Connect to a remote server and start browsing:
 
 ```bash
-# Option 1: Use the wrapper script (automatically activates venv)
-./ssh-browse user@hostname
+# Installed from PyPI or pip install -e .
+ssh-browse user@hostname
 
-# Option 2: Activate venv manually
-source venv/bin/activate
+# If running directly from source without install:
 python ssh_dir_browser.py user@hostname
 ```
 
 ### With Custom Port
 
 ```bash
-./ssh-browse user@hostname -p 2222
+ssh-browse user@hostname -p 2222
 ```
 
 ### With SSH Key
 
 ```bash
-./ssh-browse user@hostname -i ~/.ssh/my_key
+ssh-browse user@hostname -i ~/.ssh/my_key
 ```
 
 ### Start in Specific Directory
 
 ```bash
-./ssh-browse user@hostname --start-path /var/www
+ssh-browse user@hostname --start-path /var/www
 ```
 
 ### Password Authentication
 
 ```bash
-./ssh-browse user@hostname --password
+ssh-browse user@hostname --password
 ```
 
 ### AWS EC2 Example
 
 ```bash
-./ssh-browse ubuntu@ec2-12-34-56-78.compute.amazonaws.com -i ~/Downloads/aws-key.pem
+ssh-browse ubuntu@ec2-12-34-56-78.compute.amazonaws.com -i ~/Downloads/aws-key.pem
 ```
 
 ## Usage
@@ -114,7 +127,7 @@ python ssh_dir_browser.py user@hostname
 |-----|--------|
 | `↑` / `↓` | Navigate up/down |
 | `Enter` | Open directory |
-| `o` | Open current directory in VS Code |
+| `o` | Open current directory, or selected `.code-workspace` file, in VS Code |
 | `n` | Create new folder |
 | `h` | Go to home directory |
 | `r` | Refresh directory listing |
@@ -127,14 +140,15 @@ python ssh_dir_browser.py user@hostname
 3. Select `..` to go to parent directory
 4. Press `n` to create a new folder in the current directory
 5. Press `r` to refresh the directory contents
-6. Press `o` when you want to open the current directory in VS Code
+6. Press `o` to open the current directory in VS Code
+7. Select a `.code-workspace` file and press `o` to open that workspace in VS Code
 
 ### VS Code Integration
 
 When you press `o`, the application will:
 1. Open VS Code
 2. Connect to the remote server via Remote-SSH
-3. Open the selected directory
+3. Open the current directory, or the selected `.code-workspace` file
 4. Exit the browser
 
 Make sure you have:
@@ -278,7 +292,7 @@ Install it from VS Code:
 Install the required dependency:
 
 ```bash
-pip install paramiko
+pip install ssh-to-code
 ```
 
 ## Advanced Features
