@@ -31,13 +31,28 @@ A terminal-based directory browser that lets you SSH into a remote server, navig
 pip install ssh-to-code
 ```
 
-### 2. Verify CLI installation
+### 2. Linux/Ubuntu (recommended): install with pipx
+
+Ubuntu and other modern Debian-based systems may block global `pip` installs with PEP 668 (`externally-managed-environment`).
+For CLI tools like `ssh-to-code`, `pipx` is the safest option:
+
+```bash
+sudo apt update
+sudo apt install -y pipx
+pipx ensurepath
+
+# Restart terminal, then:
+pipx install ssh-to-code
+ssh-browse --help
+```
+
+### 3. Verify CLI installation
 
 ```bash
 ssh-browse --help
 ```
 
-### 3. (Optional) Install from source for development
+### 4. (Optional) Install from source for development
 
 ```bash
 git clone <repository-url>
@@ -45,7 +60,7 @@ cd ssh-to-code
 pip install -e .
 ```
 
-### 4. (Source install only) Install dependencies manually
+### 5. (Source install only) Install dependencies manually
 
 ```bash
 pip install paramiko
@@ -57,13 +72,13 @@ Or use the provided requirements file:
 pip install -r requirements.txt
 ```
 
-### 5. (Source install only) Make the script executable
+### 6. (Source install only) Make the script executable
 
 ```bash
 chmod +x ssh_dir_browser.py
 ```
 
-### 6. (Optional, source install only) Add to PATH
+### 7. (Optional, source install only) Add to PATH
 
 For easy access from anywhere:
 
@@ -293,6 +308,16 @@ Install the required dependency:
 
 ```bash
 pip install ssh-to-code
+```
+
+### Externally Managed Environment (Ubuntu/Debian)
+
+If you see `externally-managed-environment`, use `pipx` instead of system `pip`:
+
+```bash
+sudo apt install -y pipx
+pipx ensurepath
+pipx install ssh-to-code
 ```
 
 ## Advanced Features

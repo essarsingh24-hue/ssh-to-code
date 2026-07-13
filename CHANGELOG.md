@@ -2,6 +2,15 @@
 
 All notable changes to the SSH Directory Browser project will be documented in this file.
 
+## [1.0.2] - 2026-07-13
+
+### Added
+- README guidance for Linux/Ubuntu users to install with `pipx`
+- Troubleshooting note for PEP 668 `externally-managed-environment`
+
+### Changed
+- Package version bumped to `1.0.2` in `pyproject.toml`
+
 ## [1.1.0] - 2025-12-21
 
 ### Added
